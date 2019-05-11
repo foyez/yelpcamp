@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 'use strict';
 
+require('./config/config')
+require('./db/mongoose')
+
 const express        = require('express'),
       app            = express(),
       bodyParser     = require('body-parser'),
-      mongoose       = require('mongoose'),
       flash          = require('connect-flash'),
       passport       = require('passport'),
       LocalStrategy  = require('passport-local'),
       methodOverride = require('method-override'),
       User           = require('./models/user'),
       seedDB         = require('./seeds');
+
+const port = process.env.PORT
 
 // REQUIRING ROUTES
 const campgroundRoutes    = require('./routes/campgrounds'),
@@ -20,9 +24,6 @@ const campgroundRoutes    = require('./routes/campgrounds'),
 // ====================
 // APP CONFIG
 // ====================
-const url = process.env.DATABASEURL || 'mongodb://localhost/yelp_camp_v8'
-mongoose.connect(url, { useNewUrlParser: true });
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
@@ -57,5 +58,5 @@ app.use('/', indexRoutes);
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/comments', commentRoutes);
 
-app.listen(process.env.PORT, process.env.IP, () => console.log('The YelpCamp Server has started!!!'));
+app.listen(port, () => console.log('The YelpCamp Server has started!!!'));
 // app.listen(3000, () => console.log('The YelpCamp Server has started!!!'));
